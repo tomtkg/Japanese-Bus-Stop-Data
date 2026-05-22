@@ -9,6 +9,7 @@ PREF_EN = (
     "Kumamoto", "Oita", "Miyazaki", "Kagoshima", "Okinawa"
 )
 
+
 PREF_JP = (
     "",
     "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県", 
@@ -19,3 +20,7 @@ PREF_JP = (
     "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県",
     "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
 )
+
+
+def get_pref(codes: set[int]) -> str:
+    return "・".join(PREF_JP[code] for code in sorted(codes))

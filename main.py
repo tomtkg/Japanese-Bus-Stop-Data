@@ -88,7 +88,7 @@ def main() -> None:
     write_csv(
         f"bus_operators_summary.csv",
         ["都道府県名", "事業者名", "バス系統数", "停留所数"],
-        [[get_pref(v[0]), op, len(v), len(v[2])] for op, v in op_dict.items()]
+        [[get_pref(v[0]), op, len(v[1]), len(v[2])] for op, v in op_dict.items()]
     )
 
 

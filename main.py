@@ -4,7 +4,8 @@ import sys
 import zipfile
 from pathlib import Path
 from typing import Any
-from prefectures import PREF_EN, PREF_JP, get_pref
+from image import save_image
+from prefecture import PREF_EN, PREF_JP, get_pref
 
 
 def write_csv(name: str, header: list[str], rows: list[list[Any]]) -> None:
@@ -46,10 +47,12 @@ def get_data(geojson_bytes: bytes) -> list[list[Any]]:
 
 
 def main() -> None:
+    Path("data").mkdir(exist_ok=True)
+    Path("images").mkdir(exist_ok=True)
+    Path("prefectures").mkdir(exist_ok=True)
+    
     stop_rows = []
     op_dict: dict[str, list[set]] = {}
-    
-    Path("data").mkdir(exist_ok=True)
     with zipfile.ZipFile(Path(sys.argv[1])) as outer_zip:
         for name in outer_zip.namelist():
             with zipfile.ZipFile(outer_zip.open(name)) as inner_zip:
@@ -59,7 +62,7 @@ def main() -> None:
                 data = get_data(inner_zip.read(f"{name}/{name}.geojson"))
                 
                 write_csv(
-                    f"data/{code:02d}_{PREF_EN[code]}.csv",
+                    f"prefectures/{code:02d}_{PREF_EN[code]}.csv",
                     ["停留所名", "事業者名", "バス系統"],
                     [[v[0], "・".join(v[1]), ", ".join(v[2])] for v in data]
                 )
@@ -80,16 +83,19 @@ def main() -> None:
                         op_dict[operator][2].add(stop)
 
     write_csv(
-        f"bus_stops_summary.csv",
+        "data/bus_stops_summary.csv",
         ["code", "都道府県名", "停留所数", "停留所数（マージ）", "事業者数", "バス系統数"],
         [["0", "単純合計"] + [sum(v[i] for v in stop_rows) for i in [2, 3, 4, 5]]]
         + stop_rows
     )
     write_csv(
-        f"bus_operators_summary.csv",
+        "data/bus_operators_summary.csv",
         ["都道府県名", "事業者名", "バス系統数", "停留所数"],
         [[get_pref(v[0]), op, len(v[1]), len(v[2])] for op, v in op_dict.items()]
     )
+    names = ["bus_stops", "merged_bus_stops", "bus_operators", "bus_routes"]
+    for i in range(4):
+        save_image(names[i], [v[i+2] for v in stop_rows])
 
 
 if __name__ == "__main__":

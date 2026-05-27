@@ -10,6 +10,14 @@ This data is an excerpt and statistical processing of the [Bus Stop Data](https:
 python main.py P11-22_SHP.zip
 ```
 
+# Example
+|||
+|:-:|:-:|
+|![](images/bus_stops.png)|![](images/merged_bus_stops.png)|
+|Number of bus stops|Number of merged bus stops|
+|![](images/bus_operators.png)|![](images/bus_routes.png)|
+|Number of bus operators|Number of bus routes|
+
 # License
 * Original data: [PDL1.0](https://www.digital.go.jp/en/resources/open_data/public_data_license_v1.0)
 * Processed data: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0)
